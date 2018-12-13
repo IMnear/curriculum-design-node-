@@ -7,6 +7,18 @@
 
 node +express+mysql
 
+爬虫
+
+cheerio
+
+网络请求
+
+request
+
+登录权限
+
+passport
+
 
 
 ## 运行
