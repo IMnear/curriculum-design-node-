@@ -109,9 +109,9 @@ router.post('/login', function (req, res, next) {
       if (result) {
         //生成token
         //定义签名
-        const secret = 'salt';
+        const secret = 'zhangruiwen';
         const token = jwt.sign({
-          name: 123
+          name: UserName
         }, secret, {
           expiresIn: 12000 //秒到期时间
         });

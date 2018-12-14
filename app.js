@@ -10,8 +10,8 @@ var reptile = require('./routes/reptile');
 
 
 //引入jwt token验证中间件
-const expressJwt = require('express-jwt');
 const jwt = require('jsonwebtoken');
+const expressJwt = require('express-jwt');
 
 var app = express();
 
@@ -27,9 +27,6 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/reptile', reptile);
 
 // 处理跨域请求
 //处理跨域请求
@@ -45,23 +42,28 @@ app.all("*", function(req, res, next) {
 
 // token验证校验
 //定义签名
-const secret = 'salt';
-
-//使用中间件验证token合法性
+const secret = 'zhangruiwen';
+// 使用中间件验证token合法性
 app.use(expressJwt ({
   secret: secret 
 }).unless({
   path: ['/users/login','/users/reg']  //除了这些地址，其他的URL都需要验证
 }));
 
+
 //拦截器
 app.use(function (err, req, res, next) {
   //当token验证失败时会抛出如下错误
   if (err.name === 'UnauthorizedError') {   
-      //这个需要根据自己的业务逻辑来处理（ 具体的err值 请看下面）
       res.status(401).send('invalid token...token验证失败');
   }
 });
+
+// 接口路由
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use('/reptile', reptile);
+
 
 
 
