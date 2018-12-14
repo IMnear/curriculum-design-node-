@@ -37,6 +37,12 @@ npm run start
 
 npm run devstart
 
+部署之前记得修改数据库
+
+password: 
+
+ database:
+
 
 
 ## 路由
