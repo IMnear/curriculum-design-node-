@@ -8,6 +8,11 @@ var userSQL = require('../DBmysql/usersql');
 // 使用DBConfig.js的配置信息创建一个MySQL连接池
 var pool = mysql.createPool(dbConfig.mysql);
 
+//引入jwt token验证
+const jwt = require('jsonwebtoken');
+
+
+
 // 响应一个JSON数据
 var responseJSON = function (res, ret) {
   if (typeof ret === 'undefined') {
@@ -102,8 +107,18 @@ router.post('/login', function (req, res, next) {
         data.userInfo.userName = Password;
       } //登录成功返回用户信息
       if (result) {
+        //生成token
+        //定义签名
+        const secret = 'salt';
+        const token = jwt.sign({
+          name: 123
+        }, secret, {
+          expiresIn: 12000 //秒到期时间
+        });
+
         result = {
           code: 200,
+          token: token,
           msg: 'succeed'
         };
         data.result = result;

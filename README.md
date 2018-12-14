@@ -15,9 +15,11 @@ cheerio
 
 request
 
-登录权限
+登录权限 token
 
-passport
+jwt 方案
+
+
 
 
 
