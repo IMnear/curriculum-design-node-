@@ -6,6 +6,8 @@ var logger = require('morgan');
 var session = require('express-session'); 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var doctorRouter = require('./routes/doctor');
+var hospitalRouter = require('./routes/hospital');
 var reptile = require('./routes/reptile');
 
 
@@ -62,6 +64,8 @@ app.use(function (err, req, res, next) {
 // 接口路由
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/doctor', doctorRouter);
+app.use('/hospital', hospitalRouter);
 app.use('/reptile', reptile);
 
 

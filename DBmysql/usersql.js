@@ -1,7 +1,7 @@
 var UserSQL = {
-    insert: 'INSERT INTO book(id,name) VALUES(?,?)',
-    queryAll: 'SELECT * FROM book',
-    getUserById: 'SELECT * FROM book WHERE id = ? ',
-    deleteUserbyId:'DELETE FROM book WHERE id= ?',
+    insert: 'INSERT INTO user(username,password) VALUES(?,?)',
+    queryAll: 'SELECT * FROM user',
+    getUserById: 'SELECT * FROM user WHERE id = ? ',
+    deleteUserbyId:'DELETE FROM user WHERE id= ?',
 };
 module.exports = UserSQL;

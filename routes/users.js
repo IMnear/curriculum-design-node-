@@ -31,14 +31,14 @@ router.post('/reg', function (req, res, next) {
   pool.getConnection(function (err, connection) {
     // 获取前台页面传过来的参数
     var param = req.body;
-    var UserName = param.id;
-    var Password = param.name;
+    var UserName = param.username;
+    var Password = param.password;
     var _res = res;
     connection.query(userSQL.queryAll, function (err, res) {
       var isTrue = false;
       if (res) { //获取用户列表，循环遍历判断当前用户是否存在
         for (var i = 0; i < res.length; i++) {
-          if (res[i].id == UserName && res[i].name == Password) {
+          if (res[i].username == UserName && res[i].password == Password) {
             isTrue = true;
           }
         }
@@ -51,7 +51,7 @@ router.post('/reg', function (req, res, next) {
           msg: '用户已存在'
         }; //登录成功返回用户信息
       } else {
-        connection.query(userSQL.insert, [param.id, param.name], function (err, result) {
+        connection.query(userSQL.insert, [param.username, param.password], function (err, result) {
           if (result) {
             data.result = {
               code: 200,
@@ -86,15 +86,15 @@ router.post('/login', function (req, res, next) {
   pool.getConnection(function (err, connection) {
     // 获取前台页面传过来的参数
     var param = req.body;
-    var UserName = param.id;
-    var Password = param.name;
+    var UserName = param.username;
+    var Password = param.password;
     var _res = res;
     console.log(param, '前端传递信息')
     connection.query(userSQL.queryAll, function (err, res, result) {
       var isTrue = false;
       if (res) { //获取用户列表，循环遍历判断当前用户是否存在
         for (var i = 0; i < res.length; i++) {
-          if (res[i].id == UserName && res[i].name == Password) {
+          if (res[i].username == UserName && res[i].password == Password) {
             isTrue = true;
           }
         }
@@ -163,7 +163,7 @@ router.post('/add', function (req, res, next) {
     // 获取前台页面传过来的参数  
     var param = req.body;
     // 建立连接 增加一个用户信息 
-    connection.query(userSQL.insert, [param.id, param.name], function (err, result) {
+    connection.query(userSQL.insert, [param.username, param.password], function (err, result) {
       console.log(result, '返回结果')
       // 以json形式，把操作结果返回给前台页面     
       responseJSON(res, result);
@@ -179,12 +179,31 @@ router.delete('/delete', function (req, res, next) {
   // 从连接池获取连接 
   pool.getConnection(function (err, connection) {
     // 获取前台页面传过来的参数  
-    var param = req.query || req.params;
+    var param = req.body;
     console.log('接受到的信息', param)
     // 建立连接 增加一个用户信息 
     connection.query(userSQL.deleteUserbyId, [param.id], function (err, result) {
       console.log(result, '返回结果')
-      // 以json形式，把操作结果返回给前台页面     
+      console.log(result.affectedRows, '返回结果')
+      // 以json形式，把操作结果返回给前台页面 
+      if (result) {
+        if (result.affectedRows==1) {
+          result = {
+            code: 200,
+            msg: 'succeed'
+          };
+        }
+        else {
+          result = {
+            code: -1,
+            msg: '失败'
+          };
+        }
+
+
+        res.result = result;
+      }
+      if (err) res.err = err;
       responseJSON(res, result);
       // 释放连接  
       connection.release();
