@@ -53,7 +53,7 @@ router.post('/add', function (req, res, next) {
         var param = req.body;
         console.log(param, '接受数据')
         // 建立连接 增加一个医院信息 
-        connection.query(hospitalSQL.insert, [param.name,  param.img, param.address, param.abstract], function (err, result) {
+        connection.query(hospitalSQL.insert, [param.name, param.img, param.address, param.abstract], function (err, result) {
             // 以json形式，把操作结果返回给前台页面 
             console.log(result)
             if (result) {
@@ -75,6 +75,40 @@ router.post('/add', function (req, res, next) {
                 res.result = result;
             }
             if (err) res.err = err;
+            responseJSON(res, result);
+            // 释放连接  
+            connection.release();
+
+        });
+    });
+});
+
+// 修改医院
+router.post('/update', function (req, res, next) {
+    // 从连接池获取连接 
+    pool.getConnection(function (err, connection) {
+        // 获取前台页面传过来的参数  
+        var param = req.body;
+        console.log(param)
+        connection.query(hospitalSQL.puthospitalById, [param.name, param.img, param.address, param.abstract, param.hsid], function (err, result) {
+            console.log(result, '返回结果')
+            // 以json形式，把操作结果返回给前台页面  
+            if (result) {
+                if (result.affectedRows == 1) {
+                    result = {
+                        code: 200,
+                        msg: 'succeed'
+                    };
+                } else {
+                    result = {
+                        code: -1,
+                        msg: '失败'
+                    };
+                }
+
+
+                res.result = result;
+            }
             responseJSON(res, result);
             // 释放连接  
             connection.release();
@@ -127,78 +161,77 @@ router.post('/gethospitalBy', function (req, res, next) {
         // 获取前台页面传过来的参数  
         var param = req.body;
         console.log(param, '接受数据')
-        let TypeArr=["hsid"];
-        let mohu=["abstract","address","name"];
+        let TypeArr = ["hsid"];
+        let mohu = ["abstract", "address", "name"];
         // 如果param.type,param.value存在
         // 这里 "abstract","address","name" 是模糊查询
-        if(param.type&&param.value){
-            if(TypeArr.indexOf(param.type)!='-1'){
-                let Sqlstr='gethospitalBy'+param.type
+        if (param.type && param.value) {
+            if (TypeArr.indexOf(param.type) != '-1') {
+                let Sqlstr = 'gethospitalBy' + param.type
                 console.log(Sqlstr)
                 connection.query(hospitalSQL[Sqlstr], [param.value], function (err, result) {
                     console.log(result, '返回结果')
                     // 以json形式，把操作结果返回给前台页面 
                     if (result) {
-                            result = {
-                                code: 200,
-                                msg: 'succeed',
-                                hospital:result
-                            };
-                        } else {
-                            result = {
-                                code: -1,
-                                msg: '失败'
-                            };
-                        }
-                        res.result = result;
+                        result = {
+                            code: 200,
+                            msg: 'succeed',
+                            hospital: result
+                        };
+                    } else {
+                        result = {
+                            code: -1,
+                            msg: '失败'
+                        };
+                    }
+                    res.result = result;
                     if (err) res.err = err;
                     responseJSON(res, result);
                     // 释放连接  
                     connection.release();
-        
+
                 });
-            }else if (mohu.indexOf(param.type)!='-1') {
-                let Sqlstr='gethospitalBy'+param.type
+            } else if (mohu.indexOf(param.type) != '-1') {
+                let Sqlstr = 'gethospitalBy' + param.type
                 console.log(Sqlstr)
-                let Sql=hospitalSQL[Sqlstr]+"'%"+param.value+"%'"
+                let Sql = hospitalSQL[Sqlstr] + "'%" + param.value + "%'"
                 connection.query(Sql, function (err, result) {
                     console.log(result, '返回结果')
                     // 以json形式，把操作结果返回给前台页面 
                     if (result) {
-                            result = {
-                                code: 200,
-                                msg: 'succeed',
-                                hospital:result
-                            };
-                        } else {
-                            result = {
-                                code: -1,
-                                msg: '失败'
-                            };
-                        }
-                        res.result = result;
+                        result = {
+                            code: 200,
+                            msg: 'succeed',
+                            hospital: result
+                        };
+                    } else {
+                        result = {
+                            code: -1,
+                            msg: '失败'
+                        };
+                    }
+                    res.result = result;
                     if (err) res.err = err;
                     responseJSON(res, result);
                     // 释放连接  
                     connection.release();
-        
+
                 });
-            }
-            else{
+            } else {
                 res.json({
                     code: '-2',
                     msg: '传入类型错误'
                 });
             }
-            
-        }else{
+
+        } else {
             res.json({
                 code: '-2',
                 msg: '传入参数缺少'
             });
         }
-        
-        
+
+
     });
 });
 

@@ -9,6 +9,7 @@ var doctorSQL = {
     getdoctorByname: "SELECT * FROM doctor WHERE name LIKE ",
     getdoctorByoffice: "SELECT * FROM doctor WHERE office LIKE ",
     getdoctorByabstract: "SELECT * FROM doctor WHERE abstract LIKE",
+    putdoctorById:'UPDATE doctor SET name= ?, age= ?, img= ?, sex= ?, office= ?, abstract= ?, hsid= ? WHERE ysid = ?',
     deletedoctorbyId: 'DELETE FROM doctor WHERE ysid= ?',
 };
 module.exports = doctorSQL;

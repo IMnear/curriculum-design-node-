@@ -82,6 +82,41 @@ router.post('/add', function (req, res, next) {
     });
 });
 
+// 修改医生
+router.post('/update', function (req, res, next) {
+    // 从连接池获取连接 
+    pool.getConnection(function (err, connection) {
+        // 获取前台页面传过来的参数  
+        var param = req.body;
+        console.log(param)
+        connection.query(doctorSQL.putdoctorById, [param.name, param.age, param.img, param.sex, param.office, param.abstract, param.hsid,param.ysid], function (err, result) {
+            console.log(result, '返回结果')
+            // 以json形式，把操作结果返回给前台页面  
+            if (result) {
+                if (result.affectedRows == 1) {
+                    result = {
+                        code: 200,
+                        msg: 'succeed'
+                    };
+                } else {
+                    result = {
+                        code: -1,
+                        msg: '失败'
+                    };
+                }
+
+
+                res.result = result;
+            }   
+            responseJSON(res, result);
+            // 释放连接  
+            connection.release();
+
+        });
+    });
+});
+
+
 // 删除用户
 router.delete('/delete', function (req, res, next) {
     // 从连接池获取连接 
@@ -126,78 +161,77 @@ router.post('/getDoctorBy', function (req, res, next) {
         // 获取前台页面传过来的参数  
         var param = req.body;
         console.log(param, '接受数据')
-        let TypeArr=['ysid',"age","sex","hsid"];
-        let mohu=["office","abstract","name"];
+        let TypeArr = ['ysid', "age", "sex", "hsid"];
+        let mohu = ["office", "abstract", "name"];
         // 如果param.type,param.value存在
         // 这里 name office abstract 是模糊查询
-        if(param.type&&param.value){
-            if(TypeArr.indexOf(param.type)!='-1'){
-                let Sqlstr='getdoctorBy'+param.type
+        if (param.type && param.value) {
+            if (TypeArr.indexOf(param.type) != '-1') {
+                let Sqlstr = 'getdoctorBy' + param.type
                 console.log(Sqlstr)
                 connection.query(doctorSQL[Sqlstr], [param.value], function (err, result) {
                     console.log(result, '返回结果')
                     // 以json形式，把操作结果返回给前台页面 
                     if (result) {
-                            result = {
-                                code: 200,
-                                msg: 'succeed',
-                                doctor:result
-                            };
-                        } else {
-                            result = {
-                                code: -1,
-                                msg: '失败'
-                            };
-                        }
-                        res.result = result;
+                        result = {
+                            code: 200,
+                            msg: 'succeed',
+                            doctor: result
+                        };
+                    } else {
+                        result = {
+                            code: -1,
+                            msg: '失败'
+                        };
+                    }
+                    res.result = result;
                     if (err) res.err = err;
                     responseJSON(res, result);
                     // 释放连接  
                     connection.release();
-        
+
                 });
-            }else if (mohu.indexOf(param.type)!='-1') {
-                let Sqlstr='getdoctorBy'+param.type
+            } else if (mohu.indexOf(param.type) != '-1') {
+                let Sqlstr = 'getdoctorBy' + param.type
                 console.log(Sqlstr)
-                let Sql=doctorSQL[Sqlstr]+"'%"+param.value+"%'"
+                let Sql = doctorSQL[Sqlstr] + "'%" + param.value + "%'"
                 connection.query(Sql, function (err, result) {
                     console.log(result, '返回结果')
                     // 以json形式，把操作结果返回给前台页面 
                     if (result) {
-                            result = {
-                                code: 200,
-                                msg: 'succeed',
-                                doctor:result
-                            };
-                        } else {
-                            result = {
-                                code: -1,
-                                msg: '失败'
-                            };
-                        }
-                        res.result = result;
+                        result = {
+                            code: 200,
+                            msg: 'succeed',
+                            doctor: result
+                        };
+                    } else {
+                        result = {
+                            code: -1,
+                            msg: '失败'
+                        };
+                    }
+                    res.result = result;
                     if (err) res.err = err;
                     responseJSON(res, result);
                     // 释放连接  
                     connection.release();
-        
+
                 });
-            }
-            else{
+            } else {
                 res.json({
                     code: '-2',
                     msg: '传入类型错误'
                 });
             }
-            
-        }else{
+
+        } else {
             res.json({
                 code: '-2',
                 msg: '传入参数缺少'
             });
         }
-        
-        
+
+
     });
 });
 

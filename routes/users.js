@@ -174,6 +174,43 @@ router.post('/add', function (req, res, next) {
   });
 });
 
+
+// 修改用户
+router.post('/update', function (req, res, next) {
+  // 从连接池获取连接 
+  pool.getConnection(function (err, connection) {
+    // 获取前台页面传过来的参数  
+    var param = req.body;
+    let updateArr=[];
+    // 建立连接 增加一个用户信息 
+    connection.query(userSQL.putUserById, [param.username, param.password, param.rfid, param.age, param.adress, param.sex, param.phone,param.id], function (err, result) {
+      console.log(result, '返回结果')
+      // 以json形式，把操作结果返回给前台页面    
+      if (result) {
+        if (result.affectedRows == 1) {
+            result = {
+                code: 200,
+                msg: 'succeed'
+            };
+        } else {
+            result = {
+                code: -1,
+                msg: '失败'
+            };
+        }
+
+
+        res.result = result;
+    }   
+      responseJSON(res, result);
+      // 释放连接  
+      connection.release();
+
+    });
+  });
+});
+
+
 // 删除用户
 router.delete('/delete', function (req, res, next) {
   // 从连接池获取连接 
