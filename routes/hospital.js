@@ -4,7 +4,7 @@ var router = express.Router();
 // 导入MySQL模块
 var mysql = require('mysql');
 var dbConfig = require('../DBmysql/DBConfig');
-var hospitalSQL = require('../DBmysql/hospitalSQL');
+var hospitalSQL = require('../DBmysql/hospitalsql');
 // 使用DBConfig.js的配置信息创建一个MySQL连接池
 var pool = mysql.createPool(dbConfig.mysql);
 
