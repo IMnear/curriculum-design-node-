@@ -3,11 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var session = require('express-session'); 
+var session = require('express-session');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var doctorRouter = require('./routes/doctor');
 var hospitalRouter = require('./routes/hospital');
+var OverviewRouter = require('./routes/Overview');
 var reptile = require('./routes/reptile');
 
 
@@ -32,7 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 处理跨域请求
 //处理跨域请求
-app.all("*", function(req, res, next) {
+app.all("*", function (req, res, next) {
   res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -46,18 +47,18 @@ app.all("*", function(req, res, next) {
 //定义签名
 const secret = 'zhangruiwen';
 // 使用中间件验证token合法性
-app.use(expressJwt ({
-  secret: secret 
+app.use(expressJwt({
+  secret: secret
 }).unless({
-  path: ['/users/login','/users/reg']  //除了这些地址，其他的URL都需要验证
+  path: ['/users/login', '/users/reg'] //除了这些地址，其他的URL都需要验证
 }));
 
 
 //拦截器
 app.use(function (err, req, res, next) {
   //当token验证失败时会抛出如下错误
-  if (err.name === 'UnauthorizedError') {   
-      res.status(401).send('invalid token...token验证失败');
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).send('invalid token...token验证失败');
   }
 });
 
@@ -67,6 +68,8 @@ app.use('/users', usersRouter);
 app.use('/doctor', doctorRouter);
 app.use('/hospital', hospitalRouter);
 app.use('/reptile', reptile);
+app.use('/Overview', OverviewRouter);
+
 
 
 

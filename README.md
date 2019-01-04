@@ -1,7 +1,6 @@
 # curriculum-design-node-
-课程设计node后端
 
-
+课程设计 node 后端
 
 ## 技术栈
 
@@ -19,10 +18,6 @@ request
 
 jwt 方案
 
-
-
-
-
 ## 运行
 
 安装依赖
@@ -39,17 +34,24 @@ npm run devstart
 
 部署之前记得修改数据库
 
-password: 
+password:
 
- database:
-
-
+database:
 
 ## 路由
-
-
 
 users
 
 用户接口
 
+doctor
+
+医生接口
+
+hospital
+
+医院接口
+
+overview
+
+挂号相关接口

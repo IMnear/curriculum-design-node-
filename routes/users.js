@@ -92,20 +92,18 @@ router.post('/login', function (req, res, next) {
     console.log(param, '前端传递信息')
     connection.query(userSQL.queryAll, function (err, res, result) {
       var isTrue = false;
+      var data = {};
+      data.userInfo = {};
       if (res) { //获取用户列表，循环遍历判断当前用户是否存在
         for (var i = 0; i < res.length; i++) {
           if (res[i].username == UserName && res[i].password == Password) {
             isTrue = true;
+            data.userInfo = res[i]
+            console.log(data.userInfo)
           }
         }
       }
-      var data = {};
       data.isLogin = isTrue; //如果isTrue布尔值为true则登陆成功 有false则失败
-      if (isTrue) {
-        data.userInfo = {};
-        data.userInfo.uid = UserName;
-        data.userInfo.userName = Password;
-      } //登录成功返回用户信息
       if (result) {
         //生成token
         //定义签名
@@ -181,27 +179,27 @@ router.post('/update', function (req, res, next) {
   pool.getConnection(function (err, connection) {
     // 获取前台页面传过来的参数  
     var param = req.body;
-    let updateArr=[];
+    let updateArr = [];
     // 建立连接 增加一个用户信息 
-    connection.query(userSQL.putUserById, [param.username, param.password, param.rfid, param.age, param.adress, param.sex, param.phone,param.id], function (err, result) {
+    connection.query(userSQL.putUserById, [param.username, param.password, param.rfid, param.age, param.adress, param.sex, param.phone, param.id], function (err, result) {
       console.log(result, '返回结果')
       // 以json形式，把操作结果返回给前台页面    
       if (result) {
         if (result.affectedRows == 1) {
-            result = {
-                code: 200,
-                msg: 'succeed'
-            };
+          result = {
+            code: 200,
+            msg: 'succeed'
+          };
         } else {
-            result = {
-                code: -1,
-                msg: '失败'
-            };
+          result = {
+            code: -1,
+            msg: '失败'
+          };
         }
 
 
         res.result = result;
-    }   
+      }
       responseJSON(res, result);
       // 释放连接  
       connection.release();
@@ -224,13 +222,12 @@ router.delete('/delete', function (req, res, next) {
       console.log(result.affectedRows, '返回结果')
       // 以json形式，把操作结果返回给前台页面 
       if (result) {
-        if (result.affectedRows==1) {
+        if (result.affectedRows == 1) {
           result = {
             code: 200,
             msg: 'succeed'
           };
-        }
-        else {
+        } else {
           result = {
             code: -1,
             msg: '失败'

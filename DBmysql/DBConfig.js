@@ -12,9 +12,9 @@ connction.mysql = {
 
     port: "3306"
 
-} 
+}
 
 
 
-module.exports = connction; 
+module.exports = connction;
 //用module.exports暴露出这个接口，
