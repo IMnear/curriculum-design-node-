@@ -18,6 +18,8 @@ request
 
 jwt 方案
 
+websocket socket.io
+
 ## 运行
 
 安装依赖

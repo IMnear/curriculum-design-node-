@@ -153,6 +153,23 @@ router.get('/get', function (req, res, next) {
   });
 });
 
+// 查询用户通过id
+router.post('/getUserById', function (req, res, next) {
+  // 从连接池获取连接 
+  pool.getConnection(function (err, connection) {
+    // 获取前台页面传过来的参数  
+    var param = req.body;
+    // 建立连接 增加一个用户信息 
+    connection.query(userSQL.getUserById, [param.id], function (err, result) {
+      console.log(result, '返回结果')
+      // 以json形式，把操作结果返回给前台页面     
+      responseJSON(res, result);
+      // 释放连接  
+      connection.release();
+
+    });
+  });
+});
 
 // 新增用户
 router.post('/add', function (req, res, next) {
@@ -173,7 +190,7 @@ router.post('/add', function (req, res, next) {
 });
 
 
-// 修改用户
+// 修改用户通过id
 router.post('/update', function (req, res, next) {
   // 从连接池获取连接 
   pool.getConnection(function (err, connection) {
