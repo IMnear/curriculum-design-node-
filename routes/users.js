@@ -198,7 +198,7 @@ router.post('/update', function (req, res, next) {
     var param = req.body;
     let updateArr = [];
     // 建立连接 增加一个用户信息 
-    connection.query(userSQL.putUserById, [param.username, param.password, param.rfid, param.age, param.adress, param.sex, param.phone, param.id], function (err, result) {
+    connection.query(userSQL.putUserById, [param.username, param.password, param.rfid, param.age, param.adress, param.sex, param.phone, param.isadmin, param.id], function (err, result) {
       console.log(result, '返回结果')
       // 以json形式，把操作结果返回给前台页面    
       if (result) {
