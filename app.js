@@ -54,7 +54,7 @@ const secret = 'zhangruiwen';
 app.use(expressJwt({
   secret: secret
 }).unless({
-  path: ['/users/login', '/users/reg', '/todo/get', '/todo/gettodoById', '/todo/add', '/todo/update', '/courseSet/get', '/courseSet/getcourseSetById', '/courseSet/add', '/courseSet/update', '/course/get', '/course/getcourseById', '/course/add', '/course/update'] //除了这些地址，其他的URL都需要验证
+  path: ['/users/login', '/users/reg', '/todo/get', '/todo/gettodoById', '/todo/add', '/todo/update', '/courseSet/get', '/courseSet/getcourseSetById', '/courseSet/add', '/courseSet/update', '/course/get', '/course/getcourseById', '/course/add', '/course/update', '/hospital/get', '/doctor/get', '/reptile/'] //除了这些地址，其他的URL都需要验证
 }));
 
 
